@@ -1,0 +1,4 @@
+//The salaryService method needs to differenciate between the two beans (default and smart), so I have to qualify one of the beans as primary, 
+//or I have to add profile classes to my code.
+
+//If I have an application.properties and an application.yml file, the values in the application.properties file take precedence over the yml file.
