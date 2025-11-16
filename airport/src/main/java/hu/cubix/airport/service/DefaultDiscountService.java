@@ -2,7 +2,7 @@ package hu.cubix.airport.service;
 
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class DefaultDiscountService implements DiscountService {
 
 	@Override

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
 <body>
 	<h3>Welcome to the Airport Application</h3>
-	
+
 <ul>
 	<li th:each="airport : ${airports}">
 		<span th:text="${airport.id}"></span>
 		<span th:text="${airport.name}"></span>
 		<span th:text="${airport.iata}"></span>
 	</li>
-
+		
 </ul>
 
 	<form th:object="${newAirport}" method="post" th:action="@{/airport}">

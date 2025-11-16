@@ -14,14 +14,13 @@ public class AirportApplication implements CommandLineRunner {
 	PriceService priceService;
 
 	public static void main(String[] args) {
-		SpringApplication.run(AirportApplication.class, args);
+		SpringApplication.run(AirportApplication.class, args);		
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println(priceService.getFinalPrice(100));
 		System.out.println(priceService.getFinalPrice(2000));
-		
 	}
 
 }

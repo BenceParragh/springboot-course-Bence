@@ -7,25 +7,25 @@ import org.springframework.stereotype.Service;
 import hu.cubix.airport.config.AirportConfigurationProperties;
 import hu.cubix.airport.config.AirportConfigurationProperties.Discount.Special;
 
-@Service
-public class SpecialDiscountService implements DiscountService {
-
+//@Service
+public class SpecialDiscountService implements DiscountService{
+	
 //	@Value("${airport.discount.special.limit}")
 //	private int limit;
 //	@Value("${airport.discount.special.lowerPercent}")
 //	private int lowerPercent;
 //	@Value("${airport.discount.special.higherPercent}")
 //	private int higherPercent;
-
+	
 	@Autowired
 	private AirportConfigurationProperties config;
+	
 
 	@Override
 	public int getDiscountPercent(int totalPrice) {
-		// return totalPrice > 1000 ? 15 : 10;
 		Special specialConfig = config.getDiscount().getSpecial();
-		//return totalPrice > limit ? higherPercent : lowerPercent;
-		return totalPrice > specialConfig.getLimit() ? specialConfig.getHigherPercent() : specialConfig.getLowerPercent();
+		return totalPrice > specialConfig.getLimit() ? specialConfig.getHigherPercent()
+				: specialConfig.getLowerPercent();
 	}
 
 }
