@@ -20,7 +20,7 @@ public class AirportTLController {
 	}
 	
 
-	@GetMapping("/")
+	@GetMapping("/airport")
 	public String home(Map<String, Object> model) {
 		model.put("airports", airports);
 		model.put("newAirport", new AirportDto());
@@ -31,6 +31,6 @@ public class AirportTLController {
 	@PostMapping("/airport")
 	public String createAirport(AirportDto airport) {
 		airports.add(airport);
-		return "redirect:/";
+		return "redirect:/airport";
 	}
 }

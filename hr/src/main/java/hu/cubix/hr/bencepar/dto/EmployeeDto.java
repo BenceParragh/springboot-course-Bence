@@ -1,22 +1,24 @@
-package hu.cubix.hr.bencepar.model;
+package hu.cubix.hr.bencepar.dto;
 
 import java.time.LocalDate;
 
-public class Employee {
+public class EmployeeDto {
 
 	private Long id;
 	private String job;
 	private int salary;
 	private LocalDate startTimestamp;
+	
+	public EmployeeDto() {
+		
+	}
 
-	public Employee(long id, String job, int salary, LocalDate startTimestamp) {
+	public EmployeeDto(long id, String job, int salary, LocalDate startTimestamp) {
 		this.id = id;
 		this.job = job;
 		this.salary = salary;
 		this.startTimestamp = startTimestamp;
 	}
-	
-	//Employee Bence = new Employee(1L, "Developer", 50000, LocalDateTime.of(2015, 1, 1, 9, 2));
 
 	public Long getId() {
 		return id;

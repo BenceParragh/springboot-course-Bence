@@ -1,7 +1,7 @@
 package hu.cubix.hr.bencepar.service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.Period;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ public class SmartEmployeeService implements EmployeeService {
 	@Override
 	public int getPayRaisePercent(Employee employee) {
 
-		LocalDateTime start = employee.getStartTimestamp();
+		LocalDate start = employee.getStartTimestamp();
 
 		Years yearsConfig = config.getRaise().getSmart().getYears();
 
-		double yearsWorked = Duration.between(start, LocalDateTime.now()).toDays() / 365.0;
+		double yearsWorked = Period.between(start, LocalDate.now()).getDays() / 365.0;
 
 		if (yearsWorked < yearsConfig.getLow()) {
 			return yearsConfig.getLowPercent();
