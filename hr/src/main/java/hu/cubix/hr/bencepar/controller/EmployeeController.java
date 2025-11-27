@@ -26,7 +26,7 @@ public class EmployeeController {
 
 	{
 		employees.put(16018045L,
-				new EmployeeDto("Parragh Bence", 16018045, "Field Application Specialist", 850000, LocalDate.of(2024, 12, 9)));
+				new EmployeeDto(16018045, "Field Application Specialist", 850000, LocalDate.of(2024, 12, 9)));
 	}
 
 	@GetMapping

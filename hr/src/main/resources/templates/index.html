@@ -7,8 +7,7 @@
 <body>
 	<h3>Create New Employee</h3>
 
-	<form th:object="${newEmployee}" method="post" th:action="@{/employees}">
-		Name: <input th:field="*{name}" /></br>
+	<form th:object="${newEmployee}" method="post" th:action="@{/employeeservice}">
 		ID: <input th:field="*{id}" /> <br/>
 		Job: <input th:field="*{job}" /><br/> 
 		Salary: <input th:field="*{salary}" /> <br/> 
@@ -20,27 +19,18 @@
 	<table border="1">
 		<thead>
 			<tr>
-				<th>Name</th>
 				<th>ID</th>
 				<th>Job</th>
 				<th>Salary</th>
 				<th>Start Date</th>
-				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="employee : ${employees}">
-				<td>
-					<a th:href="@{/employees/edit/{id}(id=${employee.id})}"
-					th:text="${employee.name}"></a>
-				</td>
 				<td th:text="${employee.id}"></td>
 				<td th:text="${employee.job}"></td>
 				<td th:text="${employee.salary}"></td>
 				<td th:text="${employee.startTimestamp}"></td>
-				<td>
-					<a th:href="@{/employees/delete/{id}(id=${employee.id})}">Delete</a>
-				</td>
 		</tbody>
 	</table>
 </body>
