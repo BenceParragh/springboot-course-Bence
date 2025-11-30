@@ -1,13 +1,21 @@
 package hu.cubix.hr.bencepar.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Positive;
+
 import java.time.LocalDate;
 
 public class EmployeeDto {
 
 	private String name;
+	@NotEmpty
 	private Long id;
+	@NotEmpty
 	private String job;
+	@Positive
 	private int salary;
+	@Past
 	private LocalDate startTimestamp;
 	
 	public EmployeeDto() {
