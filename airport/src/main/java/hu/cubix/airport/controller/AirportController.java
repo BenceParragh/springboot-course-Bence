@@ -68,7 +68,7 @@ public class AirportController {
 	@PutMapping("/{id}")
 	public AirportDto update(@PathVariable long id,
 			@RequestBody @Valid AirportDto airportDto /* , BindingResult bindingResult */) {
-		airportDto = new AirportDto(airportDto.id(), airportDto.name(), airportDto.iata());
+		airportDto = new AirportDto(id, airportDto.name(), airportDto.iata());
 		Airport airport = airportMapper.dtoToAirport(airportDto);
 		Airport updatedAirport = airportService.update(airport);
 
