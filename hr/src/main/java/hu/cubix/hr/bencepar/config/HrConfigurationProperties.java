@@ -7,19 +7,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class HrConfigurationProperties {
 
-	private Raise raise;
+	private Salary salary = new Salary();
 
-	public Raise getRaise() {
-		return raise;
+	public Salary getSalary() {
+		return salary;
 	}
 
-	public void setRaise(Raise raise) {
-		this.raise = raise;
+	public void setSalary(Salary salary) {
+		this.salary = salary;
 	}
 
-	public static class Raise {
+	public static class Salary {
 
-		private Smart smart;
+		private Default def = new Default();
+		private Smart smart = new Smart();
+
+		public Default getDef() {
+			return def;
+		}
+
+		public void setDef(Default def) {
+			this.def = def;
+		}
 
 		public Smart getSmart() {
 			return smart;
@@ -29,85 +38,75 @@ public class HrConfigurationProperties {
 			this.smart = smart;
 		}
 
-		public static class Smart {
+	}
 
-			private Years years;
+	public static class Default {
+		private int percent;
 
-			public Years getYears() {
-				return years;
-			}
+		public int getPercent() {
+			return percent;
+		}
 
-			public void setYears(Years years) {
-				this.years = years;
-			}
+		public void setPercent(int percent) {
+			this.percent = percent;
+		}
+	}
 
-			public static class Years {
-				private double low;
-				private int mid;
-				private int high;
-				private int highPercent;
-				private int highMidPercent;
-				private int midLowPercent;
-				private int lowPercent;
+	public static class Smart {
 
-				public double getLow() {
-					return low;
-				}
+		private double low;
+		private double mid;
+		private double high;
+		private int highPercent;
+		private int midPercent;
+		private int lowPercent;
 
-				public void setLow(double low) {
-					this.low = low;
-				}
+		public double getLow() {
+			return low;
+		}
 
-				public int getMid() {
-					return mid;
-				}
+		public void setLow(double low) {
+			this.low = low;
+		}
 
-				public void setMid(int mid) {
-					this.mid = mid;
-				}
+		public double getMid() {
+			return mid;
+		}
 
-				public int getHigh() {
-					return high;
-				}
+		public void setMid(double mid) {
+			this.mid = mid;
+		}
 
-				public void setHigh(int high) {
-					this.high = high;
-				}
+		public double getHigh() {
+			return high;
+		}
 
-				public int getHighPercent() {
-					return highPercent;
-				}
+		public void setHigh(double high) {
+			this.high = high;
+		}
 
-				public void setHighPercent(int highPercent) {
-					this.highPercent = highPercent;
-				}
+		public int getHighPercent() {
+			return highPercent;
+		}
 
-				public int getHighMidPercent() {
-					return highMidPercent;
-				}
+		public void setHighPercent(int highPercent) {
+			this.highPercent = highPercent;
+		}
 
-				public void setHighMidPercent(int highMidPercent) {
-					this.highMidPercent = highMidPercent;
-				}
+		public int getMidPercent() {
+			return midPercent;
+		}
 
-				public int getMidLowPercent() {
-					return midLowPercent;
-				}
+		public void setMidPercent(int midPercent) {
+			this.midPercent = midPercent;
+		}
 
-				public void setMidLowPercent(int midLowPercent) {
-					this.midLowPercent = midLowPercent;
-				}
+		public int getLowPercent() {
+			return lowPercent;
+		}
 
-				public int getLowPercent() {
-					return lowPercent;
-				}
-
-				public void setLowPercent(int lowPercent) {
-					this.lowPercent = lowPercent;
-				}
-
-			}
-
+		public void setLowPercent(int lowPercent) {
+			this.lowPercent = lowPercent;
 		}
 
 	}

@@ -1,42 +1,71 @@
 package hu.cubix.hr.bencepar.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hu.cubix.hr.bencepar.config.HrConfigurationProperties;
-import hu.cubix.hr.bencepar.config.HrConfigurationProperties.Raise.Smart.Years;
+import hu.cubix.hr.bencepar.config.HrConfigurationProperties.Smart;
 import hu.cubix.hr.bencepar.model.Employee;
 
 @Service
-public class SmartEmployeeService implements EmployeeService {
+public class SmartEmployeeService extends AbstractEmployeeService {
 
 	@Autowired
-	private HrConfigurationProperties config;
+	HrConfigurationProperties config;
 
 	@Override
 	public int getPayRaisePercent(Employee employee) {
 
-		LocalDate start = employee.getStartTimestamp();
+		double yearsWorked = ChronoUnit.DAYS.between(employee.getStartTimestamp(), LocalDateTime.now()) / 365.0;
+		Smart smartConfig = config.getSalary().getSmart();
 
-		Years yearsConfig = config.getRaise().getSmart().getYears();
+		if (yearsWorked > smartConfig.getHigh())
+			return smartConfig.getHighPercent();
 
-		double yearsWorked = Period.between(start, LocalDate.now()).getDays() / 365.0;
+		if (yearsWorked > smartConfig.getMid())
+			return smartConfig.getMidPercent();
 
-		if (yearsWorked < yearsConfig.getLow()) {
-			return yearsConfig.getLowPercent();
-		} else if (yearsWorked < yearsConfig.getMid()) {
-			return yearsConfig.getMidLowPercent();
-		} else if (yearsWorked < yearsConfig.getHigh()) {
-			return yearsConfig.getHighMidPercent();
-		} else if (yearsWorked >= yearsConfig.getHigh()) {
-			return yearsConfig.getHighPercent();
+		if (yearsWorked > smartConfig.getLow()) {
+			return smartConfig.getLowPercent();
 		} else {
-			return yearsConfig.getLowPercent();
+			return smartConfig.getLowPercent();
 		}
+			
 
 	}
-
 }
+
+// opcionális feladat
+//		TreeMap<Double, Integer> limitsMap = smartConfig.getLimits();
+// 1. megoldás
+
+//		Integer maxLimit = null;
+//		for(var entry: limitsMap.entrySet()) {
+//			if(yearsWorked > entry.getKey()) {
+//				maxLimit = entry.getValue();
+//			} else {
+//				break;
+//			}
+//		}
+//		
+//		return maxLimit ==  null ? 0 : maxLimit;
+
+// 2. megoldás
+//		Optional<Double> optionalMax = limitsMap.keySet()
+//			.stream()
+//			.filter(k -> yearsWorked > k)
+//			.max(Double::compare);
+//		
+//		return optionalMax.isEmpty() ? 0 : limitsMap.get(optionalMax.get());
+
+// 3. megoldás
+//		Entry<Double, Integer> floorEntry = limitsMap.floorEntry(yearsWorked);
+//		return floorEntry == null ? 0 : floorEntry.getValue();
+//	}

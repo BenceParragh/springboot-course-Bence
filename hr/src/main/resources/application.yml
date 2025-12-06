@@ -1,17 +1,23 @@
 spring:
-  application:
-    name: hr
   profiles:
-    active: smart
+    active:
+    - smart
+    
+  thymeleaf:
+    cache: false
+
+  mvc:
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
 
 hr:
-  raise:
+  salary:
+    def:
+      percent: 5
     smart:
-      years:
-        low: 2.5
-        mid: 5
-        high: 10
-        highpercent: 10
-        highmidpercent: 5
-        midlowpercent: 2
-        lowpercent: 0
+      low: 1
+      mid: 2.5
+      high: 5
+      lowPercent: 1
+      midPercent: 2
+      highPercent: 5

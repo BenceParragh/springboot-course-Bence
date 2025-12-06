@@ -4,25 +4,24 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class EmployeeDto {
 
 	private String name;
-	@NotEmpty
 	private Long id;
 	@NotEmpty
 	private String job;
 	@Positive
 	private int salary;
 	@Past
-	private LocalDate startTimestamp;
+	private LocalDateTime startTimestamp;
 	
 	public EmployeeDto() {
 		
 	}
 
-	public EmployeeDto(String name, long id, String job, int salary, LocalDate startTimestamp) {
+	public EmployeeDto(String name, long id, String job, int salary, LocalDateTime startTimestamp) {
 		this.name = name;
 		this.id = id;
 		this.job = job;
@@ -54,11 +53,11 @@ public class EmployeeDto {
 		this.salary = salary;
 	}
 
-	public LocalDate getStartTimestamp() {
+	public LocalDateTime getStartTimestamp() {
 		return startTimestamp;
 	}
 
-	public void setStartTimestamp(LocalDate startTimestamp) {
+	public void setStartTimestamp(LocalDateTime startTimestamp) {
 		this.startTimestamp = startTimestamp;
 	}
 

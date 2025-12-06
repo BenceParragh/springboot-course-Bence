@@ -19,10 +19,10 @@ public class EmployeeTLController {
 
 	private List<EmployeeDto> employees = new ArrayList<>();
 
-	{
-		employees.add(new EmployeeDto("Parragh Bence", 16018045, "Field Application Specialist", 800000,
-				LocalDate.of(2024, 12, 9)));
-	}
+//	{
+//		employees.add(new EmployeeDto("Parragh Bence", 16018045, "Field Application Specialist", 800000,
+//				LocalDate.of(2024, 12, 9)));
+//	}
 
 	@GetMapping("/employees")
 	public String home(Map<String, Object> model) {

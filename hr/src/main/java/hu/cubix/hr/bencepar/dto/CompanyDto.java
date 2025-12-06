@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class CompanyDto {
 
 	@JsonView(Views.BaseData.class)
-	private Long id;
+	private Long companyId;
 	@JsonView(Views.BaseData.class)
 	private int registrationNumber;
 	@JsonView(Views.BaseData.class)
@@ -22,8 +22,8 @@ public class CompanyDto {
 
 	}
 
-	public CompanyDto(Long id, int registrationNumber, String name, String address, List<EmployeeDto> employees) {
-		this.id = id;
+	public CompanyDto(Long companyId, int registrationNumber, String name, String address, List<EmployeeDto> employees) {
+		this.companyId = companyId;
 		this.registrationNumber = registrationNumber;
 		this.name = name;
 		this.address = address;
@@ -31,12 +31,12 @@ public class CompanyDto {
 
 	}
 
-	public Long getId() {
-		return id;
+	public Long getCompanyId() {
+		return companyId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 
 	public int getRegistrationNumber() {

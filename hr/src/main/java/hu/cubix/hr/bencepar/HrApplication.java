@@ -1,6 +1,7 @@
 package hu.cubix.hr.bencepar;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -26,7 +27,7 @@ public class HrApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		 Employee Bence = new Employee(1L, "Developer", 800000, LocalDate.of(2015, 1, 1));
+		 Employee Bence = new Employee(1L, "Developer", 800000, LocalDateTime.of(2015, 9, 15, 20, 15, 0));
 		    salaryService.updateSalary(Bence);
 		    System.out.println("New salary: " + Bence.getSalary());
 	}
