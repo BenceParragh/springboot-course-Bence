@@ -53,7 +53,7 @@ public class CompanyService {
 	}
 
 	public Company deleteEmployee(long companyId, long id) {
-		Company company = companyRepository.findById(id).get();
+		Company company = companyRepository.findById(companyId).get();
 		Employee employee = employeeRepository.findById(id).get();
 		employee.setCompany(null);
 		company.getEmployees().remove(employee);
