@@ -8,21 +8,23 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import hu.cubix.hr.bencepar.dto.AverageSalaryDto;
 import hu.cubix.hr.bencepar.dto.CompanyDto;
 import hu.cubix.hr.bencepar.dto.EmployeeDto;
+import hu.cubix.hr.bencepar.dto.HighSalaryCompanyDto;
 import hu.cubix.hr.bencepar.model.Company;
 import hu.cubix.hr.bencepar.model.Employee;
 
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
-	
+
 	List<CompanyDto> companiesToDtos(List<Company> companies);
-	
+
 	CompanyDto companyToDto(Company company);
-	
+
 	@IterableMapping(qualifiedByName = "summary")
 	List<CompanyDto> companiesToSummaryDtos(List<Company> companies);
-	
+
 	@Mapping(target = "employees", ignore = true)
 	@Named("summary")
 	CompanyDto companyToSummaryDto(Company company);
@@ -31,7 +33,6 @@ public interface CompanyMapper {
 
 	List<Company> dtosToCompanies(List<CompanyDto> companies);
 
-
 	@Mapping(source = "id", target = "id")
 	@Mapping(source = "job", target = "job")
 	@Mapping(source = "startTimestamp", target = "startTimestamp")
@@ -39,5 +40,11 @@ public interface CompanyMapper {
 
 	@InheritInverseConfiguration
 	Employee dtoToEmployee(EmployeeDto employeeDto);
-	
+
+	HighSalaryCompanyDto toHighSalaryDto(Company company);
+
+	default AverageSalaryDto toAverageSalaryDto(Object[] row) {
+		return new AverageSalaryDto((String) row[0], (double) row[1]);
+	}
+
 }

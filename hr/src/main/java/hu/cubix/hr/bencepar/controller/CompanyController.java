@@ -22,14 +22,18 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import hu.cubix.hr.bencepar.dto.AverageSalaryDto;
 import hu.cubix.hr.bencepar.dto.CompanyDto;
 import hu.cubix.hr.bencepar.dto.EmployeeDto;
+import hu.cubix.hr.bencepar.dto.HighSalaryCompanyDto;
 import hu.cubix.hr.bencepar.dto.Views;
 import hu.cubix.hr.bencepar.model.Company;
+import hu.cubix.hr.bencepar.repository.CompanyRepository;
 import hu.cubix.hr.bencepar.mapper.CompanyMapper;
 import hu.cubix.hr.bencepar.mapper.EmployeeMapper;
 import hu.cubix.hr.bencepar.service.CompanyService;
 import hu.cubix.hr.bencepar.service.EmployeeService;
+import hu.cubix.hr.bencepar.service.InitDbService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -46,6 +50,12 @@ public class CompanyController {
 	
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private InitDbService initDbService;
+	
+	@Autowired
+	private CompanyRepository companyRepository;
 
 //	{
 //		List<EmployeeDto> employees = new ArrayList<>();
@@ -90,6 +100,13 @@ public class CompanyController {
 	public void delete(@PathVariable long companyId) {
 		companyService.delete(companyId);
 	}
+	
+	//Clear all entities (companies and emloyees)
+	
+	@DeleteMapping
+	public void delete() {
+		initDbService.clearDB();
+	}
 
 	@PostMapping("/{companyId}/employees")
 	public CompanyDto addNewEmployee(@PathVariable long companyId, @RequestBody EmployeeDto employeeDto) {
@@ -109,4 +126,30 @@ public class CompanyController {
 		return companyMapper.companyToDto(company);
 	}
 
+	// Companies with high salary employees
+    @GetMapping("/highSalary/{salaryLimit}")
+    public List<HighSalaryCompanyDto> getHighSalaryCompanies(@PathVariable Long salaryLimit) {
+        return companyRepository.findCompaniesWithHighSalaryEmployee(salaryLimit)
+            .stream()
+            .map(companyMapper::toHighSalaryDto)
+            .toList();
+    }
+    
+    // Companies with many employees
+    @GetMapping("/manyEmployees/{employeeLimit}")
+    public List<CompanyDto> getManyEmployeesCompanies(@PathVariable int employeeLimit) {
+        return companyRepository.findCompaniesWithHighEmployeeCount(employeeLimit)
+            .stream()
+            .map(companyMapper::companyToDto)
+            .toList();
+    }
+	
+ // Average salary by job
+    @GetMapping("/{companyId}/avgSalaryByJob")
+    public List<AverageSalaryDto> getAverageSalaryByJob(@PathVariable Long companyId) {
+        return companyRepository.findAverageSalaryByJob(companyId)
+            .stream()
+            .map(companyMapper::toAverageSalaryDto)
+            .toList();
+    }
 }

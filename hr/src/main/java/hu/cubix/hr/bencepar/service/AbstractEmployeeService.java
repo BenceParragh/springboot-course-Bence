@@ -14,8 +14,7 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
-	 
+
 	@Override
 	public Employee save(Employee employee) {
 		return employeeRepository.save(employee);
@@ -23,7 +22,7 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 
 	@Override
 	public Employee update(Employee employee) {
-		if(!employeeRepository.existsById(employee.getId()))
+		if (!employeeRepository.existsById(employee.getId()))
 			return null;
 		return employeeRepository.save(employee);
 	}
@@ -47,7 +46,5 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 	public List<Employee> findBySalaryGreaterThan(Integer minSalary) {
 		return employeeRepository.findBySalaryGreaterThan(minSalary);
 	}
-	
-	
-	
+
 }

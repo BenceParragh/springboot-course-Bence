@@ -7,6 +7,9 @@ import java.util.Objects;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,8 +26,8 @@ public class Company {
 	private String name;
 	private String address;
 
-	@OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<Employee> employees;
+	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Employee> employees = new ArrayList<>();
 
 	public Company() {
 	}
@@ -99,5 +102,17 @@ public class Company {
 			this.employees = new ArrayList<>();
 		this.employees.add(employee);
 		employee.setCompany(this);
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "company_form")
+	private CompanyForm companyForm;
+
+	public final CompanyForm getCompanyForm() {
+		return companyForm;
+	}
+
+	public final void setCompanyForm(CompanyForm companyForm) {
+		this.companyForm = companyForm;
 	}
 }
