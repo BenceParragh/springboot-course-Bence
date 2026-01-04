@@ -47,13 +47,13 @@ public class CompanyController {
 
 	@Autowired
 	private EmployeeMapper employeeMapper;
-	
+
 	@Autowired
 	private CompanyService companyService;
-	
+
 	@Autowired
 	private InitDbService initDbService;
-	
+
 	@Autowired
 	private CompanyRepository companyRepository;
 
@@ -67,15 +67,19 @@ public class CompanyController {
 //	}
 
 	@GetMapping
-	public List<CompanyDto> getCompanies(@RequestParam Optional<Boolean> full) {
-		List<Company> companies = companyService.findAll();
+	public List<CompanyDto> findAll(@RequestParam Optional<Boolean> full) {
+		List<Company> companies = full.orElse(false) 
+				? companyRepository.findAllWithEmployees() 
+				: companyService.findAll();
 		return full.orElse(false) ? companyMapper.companiesToDtos(companies)
 				: companyMapper.companiesToSummaryDtos(companies);
 	}
 
 	@GetMapping("/{companyId}")
-	public CompanyDto findById(@PathVariable long id, @RequestParam Optional<Boolean> full) {
-		Company company = companyService.findById(id)
+	public CompanyDto findById(@PathVariable("companyId") long id, @RequestParam Optional<Boolean> full) {
+		Company company = full.orElse(false)
+				? companyRepository.findByIdWithEmployees(id)
+				: companyService.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		return full.orElse(false) ? companyMapper.companyToDto(company) : companyMapper.companyToSummaryDto(company);
 	}
@@ -100,9 +104,9 @@ public class CompanyController {
 	public void delete(@PathVariable long companyId) {
 		companyService.delete(companyId);
 	}
-	
-	//Clear all entities (companies and emloyees)
-	
+
+	// Clear all entities (companies and emloyees)
+
 	@DeleteMapping
 	public void delete() {
 		initDbService.clearDB();
@@ -127,29 +131,23 @@ public class CompanyController {
 	}
 
 	// Companies with high salary employees
-    @GetMapping("/highSalary/{salaryLimit}")
-    public List<HighSalaryCompanyDto> getHighSalaryCompanies(@PathVariable Long salaryLimit) {
-        return companyRepository.findCompaniesWithHighSalaryEmployee(salaryLimit)
-            .stream()
-            .map(companyMapper::toHighSalaryDto)
-            .toList();
-    }
-    
-    // Companies with many employees
-    @GetMapping("/manyEmployees/{employeeLimit}")
-    public List<CompanyDto> getManyEmployeesCompanies(@PathVariable int employeeLimit) {
-        return companyRepository.findCompaniesWithHighEmployeeCount(employeeLimit)
-            .stream()
-            .map(companyMapper::companyToDto)
-            .toList();
-    }
-	
- // Average salary by job
-    @GetMapping("/{companyId}/avgSalaryByJob")
-    public List<AverageSalaryDto> getAverageSalaryByJob(@PathVariable Long companyId) {
-        return companyRepository.findAverageSalaryByJob(companyId)
-            .stream()
-            .map(companyMapper::toAverageSalaryDto)
-            .toList();
-    }
+	@GetMapping("/highSalary/{salaryLimit}")
+	public List<HighSalaryCompanyDto> getHighSalaryCompanies(@PathVariable Long salaryLimit) {
+		return companyRepository.findCompaniesWithHighSalaryEmployee(salaryLimit).stream()
+				.map(companyMapper::toHighSalaryDto).toList();
+	}
+
+	// Companies with many employees
+	@GetMapping("/manyEmployees/{employeeLimit}")
+	public List<CompanyDto> getManyEmployeesCompanies(@PathVariable int employeeLimit) {
+		return companyRepository.findCompaniesWithHighEmployeeCount(employeeLimit).stream()
+				.map(companyMapper::companyToDto).toList();
+	}
+
+	// Average salary by job
+	@GetMapping("/{companyId}/avgSalaryByJob")
+	public List<AverageSalaryDto> getAverageSalaryByJob(@PathVariable Long companyId) {
+		return companyRepository.findAverageSalaryByJob(companyId).stream().map(companyMapper::toAverageSalaryDto)
+				.toList();
+	}
 }

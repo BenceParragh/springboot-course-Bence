@@ -1,5 +1,7 @@
 package hu.cubix.airport.model;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -25,6 +27,12 @@ public class Airport {
 	private String iata;
 
 	public Airport() {
+	}
+	
+	public Airport(String name, String iata) {
+		super();
+		this.name = name;
+		this.iata = iata;
 	}
 
 	public Airport(long id, String name, String iata) {
@@ -57,5 +65,24 @@ public class Airport {
 	public void setIata(String iata) {
 		this.iata = iata;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Airport other = (Airport) obj;
+		return id == other.id;
+	}
+	
+	
 
 }

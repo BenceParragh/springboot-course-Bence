@@ -13,8 +13,16 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 
+@NamedEntityGraph(
+		name = "Company.withEmployees",
+		attributeNodes = {
+				@NamedAttributeNode("employees")
+		}
+)
 @Entity
 public class Company {
 
@@ -108,11 +116,11 @@ public class Company {
 	@Column(name = "company_form")
 	private CompanyForm companyForm;
 
-	public final CompanyForm getCompanyForm() {
+	public CompanyForm getCompanyForm() {
 		return companyForm;
 	}
 
-	public final void setCompanyForm(CompanyForm companyForm) {
+	public void setCompanyForm(CompanyForm companyForm) {
 		this.companyForm = companyForm;
 	}
 }

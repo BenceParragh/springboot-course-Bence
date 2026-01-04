@@ -27,7 +27,7 @@ public class AirportApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println(priceService.getFinalPrice(100));
 		System.out.println(priceService.getFinalPrice(2000));
-		airportService.createFlight(302, 303, "LH1676", LocalDateTime.now());
+		//airportService.createFlight(302, 303, "LH1676", LocalDateTime.now());
 	}
 
 }

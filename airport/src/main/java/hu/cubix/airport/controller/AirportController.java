@@ -23,6 +23,7 @@ import hu.cubix.airport.dto.AirportDto;
 import hu.cubix.airport.mapper.AirportMapper;
 import hu.cubix.airport.model.Airport;
 import hu.cubix.airport.service.AirportService;
+import hu.cubix.airport.service.LogEntryService;
 import hu.cubix.airport.service.NonUniqueIataException;
 import jakarta.validation.Valid;
 
@@ -71,7 +72,7 @@ public class AirportController {
 		airportDto = new AirportDto(id, airportDto.name(), airportDto.iata());
 		Airport airport = airportMapper.dtoToAirport(airportDto);
 		Airport updatedAirport = airportService.update(airport);
-
+		
 		if (updatedAirport == null)
 			// return ResponseEntity.notFound().build();
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
