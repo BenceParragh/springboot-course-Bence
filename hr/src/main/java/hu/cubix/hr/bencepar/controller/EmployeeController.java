@@ -11,6 +11,9 @@ import hu.cubix.hr.bencepar.service.EmployeeService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,10 +49,16 @@ public class EmployeeController {
 //	}
 
 	@GetMapping
-	public List<EmployeeDto> getEmployees(@RequestParam Optional<Integer> minSalary){
-		return minSalary.isEmpty() 
-				? employeeMapper.employeesToDtos(employeeService.findAll())
-				: employeeMapper.employeesToDtos(employeeService.findBySalaryGreaterThan(minSalary.get()));
+	public List<EmployeeDto> getEmployees(@RequestParam Optional<Integer> minSalary, @SortDefault("employeeId") Pageable pageable){
+		if(minSalary.isEmpty())
+			return employeeMapper.employeesToDtos(employeeService.findAll(pageable).getContent());
+		
+		Page<Employee> page = employeeService.findBySalaryGreaterThan(minSalary.get(), pageable);
+		System.out.println(page.getTotalElements());
+		System.out.println(page.getTotalPages());
+		System.out.println(page.isFirst());
+		System.out.println(page.isLast());
+		return employeeMapper.employeesToDtos(page.getContent());  
 	}
 
 	

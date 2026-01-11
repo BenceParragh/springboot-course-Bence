@@ -1,6 +1,8 @@
 package hu.cubix.hr.bencepar.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
@@ -8,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Employee {
@@ -23,6 +26,18 @@ public class Employee {
 	@ManyToOne
 	@JoinColumn(name = "company_id")
 	private Company company;
+	
+	@OneToMany(mappedBy = "employee")
+	private List<HolidayRequest> holidayRequests;
+
+	@ManyToOne
+	private Position position;
+
+	@ManyToOne
+	private Employee manager;
+	
+	private String username;
+	private String password;
 
 	public Employee() {
 	}
@@ -102,5 +117,52 @@ public class Employee {
 		this.company = company;
 	}
 	
+	public final List<HolidayRequest> getHolidayRequests() {
+		return holidayRequests;
+	}
+
+	public final void setHolidayRequests(List<HolidayRequest> holidayRequests) {
+		this.holidayRequests = holidayRequests;
+	}
+	
+	public void addHolidayRequest(HolidayRequest holidayRequest) {
+		if (this.holidayRequests == null)
+			this.holidayRequests = new ArrayList<>();
+
+		this.holidayRequests.add(holidayRequest);
+		holidayRequest.setEmployee(this);
+	}
+
+	public final Position getPosition() {
+		return position;
+	}
+
+	public final void setPosition(Position position) {
+		this.position = position;
+	}
+
+	public final Employee getManager() {
+		return manager;
+	}
+
+	public final void setManager(Employee manager) {
+		this.manager = manager;
+	}
+
+	public final String getUsername() {
+		return username;
+	}
+
+	public final void setUsername(String username) {
+		this.username = username;
+	}
+
+	public final String getPassword() {
+		return password;
+	}
+
+	public final void setPassword(String password) {
+		this.password = password;
+	}
 
 }

@@ -1,29 +1,63 @@
 package hu.cubix.hr.bencepar.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import hu.cubix.hr.bencepar.model.Company;
 import hu.cubix.hr.bencepar.model.Employee;
+import hu.cubix.hr.bencepar.model.Position;
 import hu.cubix.hr.bencepar.repository.EmployeeRepository;
+import hu.cubix.hr.bencepar.repository.PositionRepository;
 
 @Service
 public abstract class AbstractEmployeeService implements EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-
+	
+	@Autowired
+	private PositionRepository positionRepository;
+	
+	
 	@Override
+	@Transactional
 	public Employee save(Employee employee) {
+		processCompanyAndPosition(employee);
+		
 		return employeeRepository.save(employee);
 	}
 
+	private void processCompanyAndPosition(Employee employee) {
+		employee.setCompany(null);
+		String posName = employee.getPosition().getName();
+		Position position = null;
+		if(posName != null) {
+			List<Position> positions = positionRepository.findByName(posName);
+			if(positions.isEmpty()) {
+				position = positionRepository.save(new Position(posName, null));
+			} else {
+				position = positions.get(0);
+			}
+		}
+		employee.setPosition(position);
+	}
+
 	@Override
+	@Transactional
 	public Employee update(Employee employee) {
-		if (!employeeRepository.existsById(employee.getId()))
+		if(!employeeRepository.existsById(employee.getId()))
 			return null;
+		processCompanyAndPosition(employee);
 		return employeeRepository.save(employee);
 	}
 
@@ -31,6 +65,12 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 	public List<Employee> findAll() {
 		return employeeRepository.findAll();
 	}
+	
+	@Override
+	public Page<Employee> findAll(Pageable pageable) {
+		return employeeRepository.findAll(pageable);
+	}
+
 
 	@Override
 	public Optional<Employee> findById(long id) {
@@ -38,13 +78,47 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 	}
 
 	@Override
+	@Transactional
 	public void delete(long id) {
 		employeeRepository.deleteById(id);
 	}
 
 	@Override
-	public List<Employee> findBySalaryGreaterThan(Integer minSalary) {
-		return employeeRepository.findBySalaryGreaterThan(minSalary);
+	public Page<Employee> findBySalaryGreaterThan(Integer minSalary, Pageable pageable) {
+		return employeeRepository.findBySalaryGreaterThan(minSalary, pageable);
 	}
+	
+	@Override
+	public List<Employee> findEmployeesByExample(Employee example) {
+		long id = example.getId();
+		String name = example.getName();
+		String title = example.getPosition().getName();
+		int salary = example.getSalary();
+		LocalDateTime entryDate = example.getStartTimestamp();
+		Company company = example.getCompany();
+		String companyName = company == null ? null : company.getName();
 
+		Specification<Employee> spec = Specification.where(null);
+
+		if (id > 0)
+			spec = spec.and(EmployeeSpecifications.hasId(id));
+
+		if (StringUtils.hasText(name))
+			spec = spec.and(EmployeeSpecifications.hasName(name));
+
+		if (StringUtils.hasText(title))
+			spec = spec.and(EmployeeSpecifications.hasTitle(title));
+
+		if (salary > 0)
+			spec = spec.and(EmployeeSpecifications.hasSalary(salary));
+
+		if (entryDate != null)
+			spec = spec.and(EmployeeSpecifications.hasEntryDate(entryDate));
+
+		if (StringUtils.hasText(companyName))
+			spec = spec.and(EmployeeSpecifications.hasCompany(companyName));
+
+		return employeeRepository.findAll(spec, Sort.by("id"));
+	}
+	
 }
