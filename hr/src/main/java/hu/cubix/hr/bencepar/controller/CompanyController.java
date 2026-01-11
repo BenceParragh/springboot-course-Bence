@@ -34,7 +34,6 @@ import hu.cubix.hr.bencepar.mapper.EmployeeMapper;
 import hu.cubix.hr.bencepar.service.CompanyService;
 import hu.cubix.hr.bencepar.service.EmployeeService;
 import hu.cubix.hr.bencepar.service.InitDbService;
-import hu.cubix.hr.bencepar.service.SalaryService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -58,8 +57,6 @@ public class CompanyController {
 	@Autowired
 	private CompanyRepository companyRepository;
 
-	@Autowired
-	SalaryService salaryService;
 //	{
 //		List<EmployeeDto> employees = new ArrayList<>();
 //		employees.add(new EmployeeDto("Parragh Bence", 16018045, "Field Application Specialist", 850000,
@@ -152,19 +149,5 @@ public class CompanyController {
 	public List<AverageSalaryDto> getAverageSalaryByJob(@PathVariable Long companyId) {
 		return companyRepository.findAverageSalaryByJob(companyId).stream().map(companyMapper::toAverageSalaryDto)
 				.toList();
-	}
-	
-	@PutMapping("/{id}/salary/{pos}/{minSalary}")
-	public void raiseMinSalary(@PathVariable long id, @PathVariable String pos, @PathVariable int minSalary) {
-		salaryService.raiseMinimalSalary(id, pos, minSalary);
-	}
-	
-
-	private List<CompanyDto> mapCompanies(List<Company> companies, Optional<Boolean> full) {
-		if (full.orElse(false)) {
-			return companyMapper.companiesToDtos(companies);
-		} else {
-			return companyMapper.companiesToSummaryDtos(companies);
-		}
 	}
 }
