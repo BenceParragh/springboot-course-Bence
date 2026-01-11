@@ -42,9 +42,16 @@ public class Employee {
 	public Employee() {
 	}
 
-	public Employee(long id, String job, int salary, LocalDateTime startTimestamp) {
+	public Employee(long id, String name, String job, int salary, LocalDateTime startTimestamp) {
 		this.id = id;
+		this.name = name;
 		this.job = job;
+		this.salary = salary;
+		this.startTimestamp = startTimestamp;
+	}
+
+	public Employee(int salary, LocalDateTime startTimestamp) {
+		super();
 		this.salary = salary;
 		this.startTimestamp = startTimestamp;
 	}
@@ -117,11 +124,11 @@ public class Employee {
 		this.company = company;
 	}
 	
-	public final List<HolidayRequest> getHolidayRequests() {
+	public List<HolidayRequest> getHolidayRequests() {
 		return holidayRequests;
 	}
 
-	public final void setHolidayRequests(List<HolidayRequest> holidayRequests) {
+	public void setHolidayRequests(List<HolidayRequest> holidayRequests) {
 		this.holidayRequests = holidayRequests;
 	}
 	
@@ -133,35 +140,35 @@ public class Employee {
 		holidayRequest.setEmployee(this);
 	}
 
-	public final Position getPosition() {
+	public Position getPosition() {
 		return position;
 	}
 
-	public final void setPosition(Position position) {
+	public void setPosition(Position position) {
 		this.position = position;
 	}
 
-	public final Employee getManager() {
+	public Employee getManager() {
 		return manager;
 	}
 
-	public final void setManager(Employee manager) {
+	public void setManager(Employee manager) {
 		this.manager = manager;
 	}
 
-	public final String getUsername() {
+	public String getUsername() {
 		return username;
 	}
 
-	public final void setUsername(String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
-	public final String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public final void setPassword(String password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 

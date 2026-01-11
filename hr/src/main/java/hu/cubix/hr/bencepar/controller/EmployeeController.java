@@ -49,7 +49,7 @@ public class EmployeeController {
 //	}
 
 	@GetMapping
-	public List<EmployeeDto> getEmployees(@RequestParam Optional<Integer> minSalary, @SortDefault("employeeId") Pageable pageable){
+	public List<EmployeeDto> getEmployees(@RequestParam Optional<Integer> minSalary, @SortDefault("id") Pageable pageable){
 		if(minSalary.isEmpty())
 			return employeeMapper.employeesToDtos(employeeService.findAll(pageable).getContent());
 		
@@ -96,6 +96,11 @@ public class EmployeeController {
 	@PutMapping("/payRaise")
 	public int getPayRaisePercent(@RequestBody Employee employee) {
 		return employeeService.getPayRaisePercent(employee);
+	}
+	
+	@PostMapping("/search")
+	public List<EmployeeDto> findByExample(@RequestBody EmployeeDto example) {
+		return employeeMapper.employeesToDtos(employeeService.findEmployeesByExample(employeeMapper.dtoToEmployee(example)));
 	}
 	
 

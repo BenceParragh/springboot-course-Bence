@@ -24,26 +24,25 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	private PositionRepository positionRepository;
-	
-	
+
 	@Override
 	@Transactional
 	public Employee save(Employee employee) {
 		processCompanyAndPosition(employee);
-		
+
 		return employeeRepository.save(employee);
 	}
 
 	private void processCompanyAndPosition(Employee employee) {
 		employee.setCompany(null);
-		String posName = employee.getPosition().getName();
+		String posName = employee.getPosition() != null ? employee.getPosition().getName() : null;
 		Position position = null;
-		if(posName != null) {
+		if (posName != null) {
 			List<Position> positions = positionRepository.findByName(posName);
-			if(positions.isEmpty()) {
+			if (positions.isEmpty()) {
 				position = positionRepository.save(new Position(posName, null));
 			} else {
 				position = positions.get(0);
@@ -55,7 +54,7 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 	@Override
 	@Transactional
 	public Employee update(Employee employee) {
-		if(!employeeRepository.existsById(employee.getId()))
+		if (!employeeRepository.existsById(employee.getId()))
 			return null;
 		processCompanyAndPosition(employee);
 		return employeeRepository.save(employee);
@@ -65,12 +64,11 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 	public List<Employee> findAll() {
 		return employeeRepository.findAll();
 	}
-	
+
 	@Override
 	public Page<Employee> findAll(Pageable pageable) {
 		return employeeRepository.findAll(pageable);
 	}
-
 
 	@Override
 	public Optional<Employee> findById(long id) {
@@ -87,12 +85,12 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 	public Page<Employee> findBySalaryGreaterThan(Integer minSalary, Pageable pageable) {
 		return employeeRepository.findBySalaryGreaterThan(minSalary, pageable);
 	}
-	
+
 	@Override
 	public List<Employee> findEmployeesByExample(Employee example) {
 		long id = example.getId();
 		String name = example.getName();
-		String title = example.getPosition().getName();
+		String title = example.getPosition() != null ? example.getPosition().getName() : null;
 		int salary = example.getSalary();
 		LocalDateTime entryDate = example.getStartTimestamp();
 		Company company = example.getCompany();
@@ -120,5 +118,5 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 
 		return employeeRepository.findAll(spec, Sort.by("id"));
 	}
-	
+
 }

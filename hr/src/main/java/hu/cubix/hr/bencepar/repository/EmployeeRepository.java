@@ -24,7 +24,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 	
 	List<Employee> findByNameStartingWithIgnoreCase(String name);
 
-	List<Employee> findByDateOfStartWorkBetween(LocalDateTime start, LocalDateTime end);
+	List<Employee> findByStartTimestampBetween(LocalDateTime start, LocalDateTime end);
 
 	@Modifying
 	@Transactional
@@ -36,5 +36,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 	void updateSalaries(String positionName, int minimalSalary, long companyId);
 
 	Optional<Employee> findByUsername(String username);
-
+ 
 }

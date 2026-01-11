@@ -13,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
@@ -112,8 +113,7 @@ public class Company {
 		employee.setCompany(this);
 	}
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "company_form")
+	@ManyToOne
 	private CompanyForm companyForm;
 
 	public CompanyForm getCompanyForm() {

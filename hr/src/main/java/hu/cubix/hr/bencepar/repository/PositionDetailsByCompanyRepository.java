@@ -8,6 +8,6 @@ import hu.cubix.hr.bencepar.model.PositionDetailsByCompany;
 
 public interface PositionDetailsByCompanyRepository extends JpaRepository<PositionDetailsByCompany, Long> {
 
-	List<PositionDetailsByCompany> findByPositionNameAndCompanyId(String positionName, long companyId);
+	List<PositionDetailsByCompany> findByPositionNameAndCompanyCompanyId(String positionName, long companyId);
 
 }
