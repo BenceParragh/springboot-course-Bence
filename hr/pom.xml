@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.7</version>
+		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>hu.cubix.spring.bencepar</groupId>
@@ -70,9 +70,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>hu.cubix.spring</groupId>
-			<artifactId>airport</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -93,6 +93,11 @@
                         <version>${org.mapstruct.version}</version>
                     </path>
                     <!-- other annotation processors -->
+                    <path>
+							<groupId>org.hibernate</groupId>
+							<artifactId>hibernate-jpamodelgen</artifactId>
+							<version>${hibernate.version}</version>
+						</path>
                 </annotationProcessorPaths>
             </configuration>
         </plugin>
