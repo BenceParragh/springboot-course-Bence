@@ -22,14 +22,15 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 	@Query("SELECT e.job, AVG(e.salary) FROM Company c JOIN c.employees e "
 			+ "WHERE c.id = :companyId GROUP BY e.job ORDER BY AVG(e.salary) DESC")
 	List<Object[]> findAverageSalaryByJob(@Param("companyId") long companyId);
-
+	
 	//@Query("SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.employees")
+	@EntityGraph(attributePaths = {"employees", "employees.position"})
 	@Query("SELECT c FROM Company c")
-	//@EntityGraph(attributePaths = {"employees"})
-	@EntityGraph("Company.withEmployees")
+	//@EntityGraph("Company.withEmployees")
 	public List<Company> findAllWithEmployees();
 	
-	@Query("SELECT c FROM Company c WHERE c.id=:id")
-	@EntityGraph("Company.withEmployees")
-	public Company findByIdWithEmployees(Long id);
+	@EntityGraph(attributePaths = {"employees", "employees.position"})
+	@Query("SELECT c FROM Company c WHERE c.id= :companyId")
+//	@EntityGraph("Company.withEmployees")
+	public Optional<Company> findByIdWithEmployees(long companyId);
 }

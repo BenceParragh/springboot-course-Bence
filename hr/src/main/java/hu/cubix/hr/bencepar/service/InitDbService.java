@@ -2,65 +2,82 @@ package hu.cubix.hr.bencepar.service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import hu.cubix.hr.bencepar.model.Company;
 import hu.cubix.hr.bencepar.model.Employee;
+import hu.cubix.hr.bencepar.model.Position;
+import hu.cubix.hr.bencepar.model.PositionDetailsByCompany;
+import hu.cubix.hr.bencepar.model.Qualification;
 import hu.cubix.hr.bencepar.repository.CompanyRepository;
 import hu.cubix.hr.bencepar.repository.EmployeeRepository;
+import hu.cubix.hr.bencepar.repository.HolidayRequestRepository;
+import hu.cubix.hr.bencepar.repository.PositionDetailsByCompanyRepository;
+import hu.cubix.hr.bencepar.repository.PositionRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class InitDbService {
 
-	private final CompanyRepository companyRepository;
-	private final EmployeeRepository employeeRepository;
+	@Autowired
+	PositionRepository positionRepository;
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
 
-	public InitDbService(CompanyRepository companyRepository, EmployeeRepository employeeRepository) {
-		super();
-		this.companyRepository = companyRepository;
-		this.employeeRepository = employeeRepository;
+	@Autowired
+	CompanyRepository companyRepository;
+	
+	@Autowired
+	PositionDetailsByCompanyRepository positionDetailsByCompanyRepository;
+	
+	@Autowired
+	HolidayRequestRepository holidayRequestRepository;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+	
+	public void clearDb() {
+		positionDetailsByCompanyRepository.deleteAllInBatch();
+		holidayRequestRepository.deleteAllInBatch();
+		employeeRepository.deleteAllInBatch();
+		positionRepository.deleteAllInBatch();
+		companyRepository.deleteAllInBatch();
 	}
+	
+	@Transactional
+	public void initDb() {
+		
+		Position developer = positionRepository.save(new Position("fejlesztő", Qualification.UNIVERSITY));
+		Position tester = positionRepository.save(new Position("tesztelő", Qualification.HIGH_SCHOOL));
+		
+		Employee newEmployee1 = employeeRepository.save(new Employee(1601, "ssdf", developer, 200000, LocalDateTime.now()));
+		newEmployee1.setUsername("user1");
+		newEmployee1.setPassword(passwordEncoder.encode("pass"));
+		
+		Employee newEmployee2 = employeeRepository.save(new Employee(8045, "t35", tester, 200000, LocalDateTime.now()));
+		newEmployee2.setUsername("user2");
+		newEmployee2.setPassword(passwordEncoder.encode("pass"));
+		newEmployee1.setManager(newEmployee2);
 
-	public void clearDB() {
-		companyRepository.deleteAll();
-		employeeRepository.deleteAll();
-	}
-
-	public void insertTestData() {
-
-		Company company1 = new Company();
-		company1.setRegistrationNumber(4165);
-		company1.setName("Sanofi");
-		company1.setAddress("1138 Budapest, Fiastyúk utca 1");
-
-		company1.getEmployees().add(
-				createEmployee("Parragh Bence", "Field Specialist", 975000, LocalDateTime.of(2020, 7, 12, 15, 30, 0), company1));
-		company1.getEmployees()
-				.add(createEmployee("Kis Pista", "Service Engineer", 856000, LocalDateTime.of(2015, 5, 1, 10, 30, 0), company1));
-
-		Company company2 = new Company();
-		company2.setRegistrationNumber(6789);
-		company2.setName("Grizzly");
-		company2.setAddress("8000 Székesfehérvár, József Attila utca 35");
-
-		company2.getEmployees()
-				.add(createEmployee("Varga Ilona", "Reception", 750000, LocalDateTime.of(2010, 3, 16, 8, 15, 0), company2));
-		company2.getEmployees()
-				.add(createEmployee("Kiss Elemér", "Logistics", 850000, LocalDateTime.of(2024, 5, 18, 10, 30, 0), company2));
-
-		companyRepository.save(company1);
-		companyRepository.save(company2);
-	}
-
-	public Employee createEmployee(String name, String job, int salary, LocalDateTime startTimestamp, Company company) {
-
-		Employee employee = new Employee();
-		employee.setName(name);
-		employee.setJob(job);
-		employee.setSalary(salary);
-		employee.setStartTimestamp(startTimestamp);
-		employee.setCompany(company);
-		return employee;
+		Company newCompany = companyRepository.save(new Company(null, 10, "sdfsd", "", null));
+		newCompany.addEmployee(newEmployee2);
+		newCompany.addEmployee(newEmployee1);
+		
+		PositionDetailsByCompany pd = new PositionDetailsByCompany();
+		pd.setCompany(newCompany);
+		pd.setMinSalary(250000);
+		pd.setPosition(developer);
+		positionDetailsByCompanyRepository.save(pd);
+		
+		PositionDetailsByCompany pd2 = new PositionDetailsByCompany();
+		pd2.setCompany(newCompany);
+		pd2.setMinSalary(200000);
+		pd2.setPosition(tester);
+		positionDetailsByCompanyRepository.save(pd2);
 	}
 
 }

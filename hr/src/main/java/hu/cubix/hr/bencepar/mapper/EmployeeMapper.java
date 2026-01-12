@@ -14,10 +14,10 @@ public interface EmployeeMapper {
 	 
 	List<EmployeeDto> employeesToDtos(List<Employee> employees);
 
-	@Mapping(source = "name", target = "name")
 	@Mapping(source = "id", target = "id")
 	@Mapping(source = "job", target = "job")
 	@Mapping(source = "startTimestamp", target = "startTimestamp")
+	@Mapping(target = "company.employees", ignore = true)
 	EmployeeDto employeeToDto(Employee employee);
 	
 	@InheritInverseConfiguration

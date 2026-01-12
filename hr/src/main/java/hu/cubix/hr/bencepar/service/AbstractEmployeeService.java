@@ -88,7 +88,8 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 
 	@Override
 	public List<Employee> findEmployeesByExample(Employee example) {
-		long id = example.getId();
+		Long idLong = example.getId();
+		long id = (idLong != null && idLong > 0) ? idLong : 0;
 		String name = example.getName();
 		String title = example.getPosition() != null ? example.getPosition().getName() : null;
 		int salary = example.getSalary();

@@ -17,6 +17,8 @@ public class EmployeeDto {
 	@Past
 	private LocalDateTime startTimestamp;
 	
+	private CompanyDto company;
+	
 	public EmployeeDto() {
 		
 	}
@@ -67,6 +69,19 @@ public class EmployeeDto {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", title=" + job + ", salary=" + salary + ", entryDate="
+				+ startTimestamp + "]";
+	}
+	public CompanyDto getCompany() {
+		return company;
+	}
+
+	public void setCompany(CompanyDto company) {
+		this.company = company;
 	}
 
 }

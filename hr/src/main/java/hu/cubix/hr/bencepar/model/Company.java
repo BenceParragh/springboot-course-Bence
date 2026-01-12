@@ -4,26 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 
-@NamedEntityGraph(
-		name = "Company.withEmployees",
-		attributeNodes = {
-				@NamedAttributeNode("employees")
-		}
-)
 @Entity
 public class Company {
 
@@ -35,17 +23,17 @@ public class Company {
 	private String name;
 	private String address;
 
-	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Employee> employees = new ArrayList<>();
-
+	@OneToMany(mappedBy = "company")
+	private List<Employee> employees;
+	
 	public Company() {
 	}
 
-	public Company(Long companyId, int registrationNumber, String name, String adress, List<Employee> employees) {
+	public Company(Long companyId, int registrationNumber, String name, String address, List<Employee> employees) {
 		this.companyId = companyId;
 		this.registrationNumber = registrationNumber;
 		this.name = name;
-		this.address = adress;
+		this.address = address;
 		this.employees = employees;
 	}
 

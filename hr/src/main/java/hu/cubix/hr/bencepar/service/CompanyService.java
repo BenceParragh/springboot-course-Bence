@@ -14,54 +14,57 @@ import jakarta.transaction.Transactional;
 @Service
 public class CompanyService {
 
-	private final EmployeeRepository employeeRepository;
+	private final EmployeeService employeeService;
 	private final CompanyRepository companyRepository;
-
-	public CompanyService(EmployeeRepository employeeRepository, CompanyRepository companyRepository) {
+	
+	public CompanyService(EmployeeService employeeService, CompanyRepository companyRepository) {
 		super();
-		this.employeeRepository = employeeRepository;
+		this.employeeService = employeeService;
 		this.companyRepository = companyRepository;
 	}
 
+	@Transactional
 	public Company save(Company company) {
 		return companyRepository.save(company);
 	}
 
+	@Transactional
 	public Company update(Company company) {
 		if (!companyRepository.existsById(company.getCompanyId()))
 			return null;
 		return companyRepository.save(company);
 	}
 
-	public List<Company> findAll() {
-		return companyRepository.findAll();
+	public List<Company> findAll(boolean full) {
+		return full ? companyRepository.findAllWithEmployees() : companyRepository.findAll();
 	}
 
-	public Optional<Company> findById(long companyId) {
-		return companyRepository.findById(companyId);
+	public Optional<Company> findById(long companyId, boolean full) {
+		return full ? companyRepository.findByIdWithEmployees(companyId) : companyRepository.findById(companyId);
 	}
 
 	public void delete(long companyId) {
 		companyRepository.deleteById(companyId);
 	}
 
+	@Transactional
 	public Company addEmployee(long companyId, Employee employee) {
-		Company company = companyRepository.findById(companyId).get();
-		company.addEmployee(employee);
-		employeeRepository.save(employee);
+		Company company = companyRepository.findByIdWithEmployees(companyId).get();
+		company.addEmployee(employeeService.save(employee));
 		return company;
 	}
 
+	@Transactional
 	public Company deleteEmployee(long companyId, long id) {
 		Company company = companyRepository.findById(companyId).get();
-		Employee employee = employeeRepository.findById(id).get();
+		Employee employee = employeeService.findById(id).get();
 		employee.setCompany(null);
 		company.getEmployees().remove(employee);
-		employeeRepository.save(employee);
+		employeeService.save(employee);
 		return company;
 	}
 
-	// @Transactional
+	@Transactional
 	public Company replaceEmployees(long companyId, List<Employee> employees) {
 		Company company = companyRepository.findById(companyId).get();
 
@@ -69,11 +72,11 @@ public class CompanyService {
 		company.getEmployees().clear();
 
 		employees.forEach(e -> {
-			// company.addEmployee(employeeRepository.save(e)); //csak @Transactional
+			company.addEmployee(employeeService.save(e)); //csak @Transactional
 			// esetben helyes
 
-			company.addEmployee(e);
-			e.setId(employeeRepository.save(e).getId());
+//			company.addEmployee(e);
+//			e.setId(employeeService.save(e).getId());
 		});
 
 		return company;

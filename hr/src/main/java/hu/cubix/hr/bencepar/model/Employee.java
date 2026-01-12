@@ -42,10 +42,10 @@ public class Employee {
 	public Employee() {
 	}
 
-	public Employee(long id, String name, String job, int salary, LocalDateTime startTimestamp) {
+	public Employee(long id, String name, Position position, int salary, LocalDateTime startTimestamp) {
 		this.id = id;
 		this.name = name;
-		this.job = job;
+		this.position = position;
 		this.salary = salary;
 		this.startTimestamp = startTimestamp;
 	}

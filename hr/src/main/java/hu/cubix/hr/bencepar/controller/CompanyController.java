@@ -67,21 +67,21 @@ public class CompanyController {
 //	}
 
 	@GetMapping
-	public List<CompanyDto> findAll(@RequestParam Optional<Boolean> full) {
-		List<Company> companies = full.orElse(false) 
-				? companyRepository.findAllWithEmployees() 
-				: companyService.findAll();
-		return full.orElse(false) ? companyMapper.companiesToDtos(companies)
+	public List<CompanyDto> getCompanies(@RequestParam Optional<Boolean> full) {
+		Boolean isFull = full.orElse(false);
+		List<Company> companies = companyService.findAll(isFull);
+		return isFull
+				? companyMapper.companiesToDtos(companies)
 				: companyMapper.companiesToSummaryDtos(companies);
 	}
 
 	@GetMapping("/{companyId}")
 	public CompanyDto findById(@PathVariable("companyId") long id, @RequestParam Optional<Boolean> full) {
-		Company company = full.orElse(false)
-				? companyRepository.findByIdWithEmployees(id)
-				: companyService.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		return full.orElse(false) ? companyMapper.companyToDto(company) : companyMapper.companyToSummaryDto(company);
+		Boolean isFull = full.orElse(false);
+		Company company = companyService.findById(id, isFull).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		return isFull
+				? companyMapper.companyToDto(company)
+				: companyMapper.companyToSummaryDto(company);
 	}
 
 	@PostMapping
@@ -109,7 +109,7 @@ public class CompanyController {
 
 	@DeleteMapping
 	public void delete() {
-		initDbService.clearDB();
+		initDbService.clearDb();
 	}
 
 	@PostMapping("/{companyId}/employees")
